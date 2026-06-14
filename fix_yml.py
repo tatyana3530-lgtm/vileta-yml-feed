@@ -21,6 +21,20 @@ CAT_BOOK_2  = "275441089652"  # Двухдверные книжные
 CAT_ALL     = "593339166932"
 TOP_LEVEL   = (CAT_RASP, CAT_BOOK, "195652040962", "267808129302", "764217904632")
 
+# Страницы каталога для микроразметки Яндекс.Директ
+CATALOG_PAGES = [
+    ("https://vileta.ru/catalog/",                          CAT_ALL),
+    ("https://vileta.ru/shkafy-raspashnye/",                CAT_RASP),
+    ("https://vileta.ru/shkafy-odnodvernye/",               CAT_RASP_1),
+    ("https://vileta.ru/shkafy-dvukhdvernye/",              CAT_RASP_2),
+    ("https://vileta.ru/shkafy-trekhdvernye/",              CAT_RASP_3),
+    ("https://vileta.ru/shkafy-chetyrekhdvernye/",          CAT_RASP_4),
+    ("https://vileta.ru/shkafy-knizhnyye/",                 CAT_BOOK),
+    ("https://vileta.ru/shkafy-knizhnyye-odnodvernye/",     CAT_BOOK_1),
+    ("https://vileta.ru/shkafy-knizhnyye-dvukhdvernye/",    CAT_BOOK_2),
+    ("https://vileta.ru/shkafy-s-yashikami/",               "764217904632"),
+]
+
 
 def get_rasp_category(width):
     if width <= 60:
@@ -93,6 +107,20 @@ def main():
         if cat.get('id') in TOP_LEVEL and cat.get('parentId') is None:
             cat.set('parentId', CAT_ALL)
             print(f"Added parentId to: {cat.text}")
+
+    # Блок <pages> для микроразметки каталогов
+    pages_el = ET.SubElement(shop, 'pages')
+    for i, (url, cat_id) in enumerate(CATALOG_PAGES, start=1):
+        page_el = ET.SubElement(pages_el, 'page')
+        page_el.set('id', str(i))
+        url_el = ET.SubElement(page_el, 'url')
+        url_el.text = url
+        type_el = ET.SubElement(page_el, 'page-type')
+        type_el.text = 'catalog'
+        cat_el = ET.SubElement(page_el, 'category-id')
+        cat_el.text = cat_id
+
+    print(f"Added {len(CATALOG_PAGES)} catalog pages")
 
     os.makedirs("docs", exist_ok=True)
     tree.write("docs/feed.yml", xml_declaration=True, encoding='UTF-8')
