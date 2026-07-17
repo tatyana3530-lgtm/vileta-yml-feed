@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<yml_catalog date="2026-07-15T18:13:00+03:00">
+<yml_catalog date="2026-07-17T08:44:06+03:00">
 	<shop>
 		<name>ViletaRUS</name>
 		<company>ViletaRUS</company>
@@ -69328,25 +69328,6 @@
 			<param name="Ширина">120</param>
 			<param name="Высота">270</param>
 			<param name="Глубина">40</param>
-		</offer>
-		<offer id="337977415752" group_id="267857199182">
-			<name>Шкаф распашной Вилета 5 Белый - 120 - 250 - 77 - </name>
-			<vendorCode>vileta-5-120-250-77</vendorCode>
-			<picture>https://static.tildacdn.com/stor3966-3061-4631-b663-313638666338/5487accd8f1c307fedefa4a7d6f6eb8f.jpg</picture>
-			<url>https://vileta.ru/shkafy-raspashnye/tproduct/267857199182-shkaf-raspashnoi-vileta-5-belii?editionuid=337977415752</url>
-			<count>9999</count>
-			<price>1200.00</price>
-			<oldprice>2145.00</oldprice>
-			<currencyId>RUR</currencyId>
-			<categoryId>951467927032</categoryId>
-			<param name="Материал корпуса">ЛДСП</param>
-			<param name="Материал фасада">ЛДСП</param>
-			<param name="Покрытие дверей">Матовое</param>
-			<param name="Форма поставки">В разобранном виде</param>
-			<param name="Вид выпуска товара">Фабричное производство</param>
-			<param name="Ширина">120</param>
-			<param name="Высота">250</param>
-			<param name="Глубина">77</param>
 		</offer>
 		<offer id="389525985952" group_id="267857199182">
 			<name>Шкаф распашной Вилета 5 Белый - 120 - 250 - 70 - </name>
