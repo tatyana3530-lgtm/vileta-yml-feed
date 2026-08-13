@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import urllib.request
 import os
+import re
 
 # URL оригинального YML с Тильды
 YML_SOURCE = "https://vileta.ru/tstore/yml/d0c79023fb412afffa0f9411671cd622.yml"
@@ -20,6 +21,35 @@ CAT_BOOK_2  = "275441089652"  # Двухдверные книжные
 # Категории верхнего уровня (должны ссылаться на All)
 CAT_ALL     = "593339166932"
 TOP_LEVEL   = (CAT_RASP, CAT_BOOK, "195652040962", "267808129302", "764217904632")
+
+# Дверность моделей — фиксированное свойство модели (не зависит от ширины
+# конкретного варианта!). Составлено по факту из категорий Тильды
+# (store CSV export, 2026-08-13). Номер модели берём из названия offer'а.
+RASP_MODEL_TO_CAT = {
+    "1":  CAT_RASP_1,   # Однодверные
+    "2":  CAT_RASP_2,   # Двухдверные
+    "3":  CAT_RASP_3,   # Трёхдверные
+    "4":  CAT_RASP_4,   # Четырёхдверные
+    "5":  CAT_RASP_2,   # Двухдверные
+    "6":  CAT_RASP_3,   # Трёхдверные
+    "8":  CAT_RASP_4,   # Четырёхдверные
+    "9":  CAT_RASP_4,   # Четырёхдверные
+    "10": CAT_RASP_4,   # Четырёхдверные
+}
+
+BOOK_MODEL_TO_CAT = {
+    "1":   CAT_BOOK_1,  # Однодверные книжные
+    "1.2": CAT_BOOK_1,  # Однодверные книжные
+    "1.3": CAT_BOOK_1,  # Однодверные книжные
+    "2":   CAT_BOOK_2,  # Двухдверные книжные
+}
+
+MODEL_NUM_RE = re.compile(r"Вилета\s+([\d]+(?:\.[\d]+)?)")
+
+
+def get_model_number(name):
+    m = MODEL_NUM_RE.search(name)
+    return m.group(1) if m else None
 
 # Страницы каталога для микроразметки Яндекс.Директ
 CATALOG_PAGES = [
@@ -89,10 +119,20 @@ def main():
         is_book = current_cat == CAT_BOOK or 'книж' in name.lower() or 'витрин' in name.lower()
         is_rasp = current_cat == CAT_RASP or 'распашн' in name.lower()
 
+        model = get_model_number(name)
+
         if is_book:
-            new_cat = get_book_category(width)
+            if model in BOOK_MODEL_TO_CAT:
+                new_cat = BOOK_MODEL_TO_CAT[model]
+            else:
+                new_cat = get_book_category(width)
+                print(f"WARNING: unknown book model '{model}' in '{name}', using width fallback")
         elif is_rasp:
-            new_cat = get_rasp_category(width)
+            if model in RASP_MODEL_TO_CAT:
+                new_cat = RASP_MODEL_TO_CAT[model]
+            else:
+                new_cat = get_rasp_category(width)
+                print(f"WARNING: unknown rasp model '{model}' in '{name}', using width fallback")
         else:
             continue
 
